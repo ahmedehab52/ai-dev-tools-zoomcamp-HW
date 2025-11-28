@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Todos</h1>
+    <a class="btn btn-primary" href="{% url 'todos:todo_create' %}">Create Todo</a>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Due</th>
+        <th>Resolved</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for todo in todos %}
+      <tr>
+        <td>
+          {% if todo.resolved %}<s>{{ todo.title }}</s>{% else %}{{ todo.title }}{% endif %}
+          <div class="text-muted small">{{ todo.description }}</div>
+        </td>
+        <td>{% if todo.due_date %}{{ todo.due_date }}{% else %}-{% endif %}</td>
+        <td>
+          {% if todo.resolved %}
+            <span class="badge bg-success">Yes</span>
+          {% else %}
+            <span class="badge bg-secondary">No</span>
+          {% endif %}
+        </td>
+        <td>
+          <a class="btn btn-sm btn-outline-secondary" href="{% url 'todos:todo_edit' todo.pk %}">Edit</a>
+          <a class="btn btn-sm btn-outline-danger" href="{% url 'todos:todo_delete' todo.pk %}">Delete</a>
+          <a class="btn btn-sm btn-outline-info" href="{% url 'todos:todo_toggle' todo.pk %}">{% if todo.resolved %}Unresolve{% else %}Resolve{% endif %}</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4">No todos yet. Create one!</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}
